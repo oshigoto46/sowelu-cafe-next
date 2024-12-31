@@ -1,8 +1,15 @@
 import { useEffect, useState } from "react";
 
+// Attendance 型を明示的に定義
+interface Attendance {
+  id: number;
+  userId: number;
+  timestamp: string;
+}
+
 export default function AttendancePage() {
   const [userId, setUserId] = useState<number | "">("");
-  const [attendances, setAttendances] = useState([]);
+  const [attendances, setAttendances] = useState<Attendance[]>([]);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -15,10 +22,11 @@ export default function AttendancePage() {
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-      const data = await response.json();
+      const data: Attendance[] = await response.json();
       setAttendances(data);
-    } catch (error: any) {
+    } catch (err) {
       setErrorMessage("Failed to fetch attendance records.");
+      console.error(err); // error を適切にログで使用
     } finally {
       setLoading(false);
     }
@@ -48,13 +56,13 @@ export default function AttendancePage() {
         throw new Error(errorData.error || "Failed to record attendance.");
       }
 
-      const data = await response.json();
+      const data: Attendance = await response.json();
       setSuccessMessage(`Attendance recorded successfully at ${data.timestamp}`);
       setErrorMessage(null);
       fetchAttendances(); // 新しい記録を取得して一覧を更新
-    } catch (error: any) {
+    } catch (err) {
       setSuccessMessage(null);
-      setErrorMessage(error.message);
+      setErrorMessage((err as Error).message);
     }
   };
 
@@ -114,7 +122,7 @@ export default function AttendancePage() {
               </tr>
             </thead>
             <tbody>
-              {attendances.map((attendance: any) => (
+              {attendances.map((attendance) => (
                 <tr key={attendance.id}>
                   <td className="border border-gray-400 px-4 py-2 text-center">{attendance.id}</td>
                   <td className="border border-gray-400 px-4 py-2 text-center">{attendance.userId}</td>
