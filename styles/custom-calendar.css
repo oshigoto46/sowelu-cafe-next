@@ -1,0 +1,53 @@
+/* カレンダー全体のスタイル */
+.calendar-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .large-calendar {
+    width: 100%;
+    max-width: 1200px; /* カレンダーの最大幅 */
+    font-size: 1.2rem; /* 全体のフォントサイズを拡大 */
+  }
+
+  .react-calendar {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .react-calendar__tile {
+    position: relative !important;
+    height: 100px !important;
+  }
+  
+  .react-calendar__tile div {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    padding: 4px !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* 日付がアクティブになったときのスタイル */
+  .react-calendar__tile--active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* カレンダーのセル間のスペースを調整 */
+  .react-calendar__month-view__days__day {
+    margin: 4px;
+  }
+  
+  /* タイトルやナビゲーションのスタイル */
+  .react-calendar__navigation {
+    margin-bottom: 10px;
+  }
+  
+  .react-calendar__navigation button {
+    font-size: 1.1rem;
+  }
+  
