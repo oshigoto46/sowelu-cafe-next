@@ -22,6 +22,7 @@ export default function InventoryPage() {
   const [newItemCategory, setNewItemCategory] = useState<string>(""); // カテゴリを管理
   const [newCategoryName, setNewCategoryName] = useState<string>("");
 
+  // カテゴリを取得
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -43,25 +44,63 @@ export default function InventoryPage() {
     fetchCategories();
   }, []);
 
-  const handleAddItem = () => {
+  // 在庫リストを取得
+  useEffect(() => {
+    const fetchInventory = async () => {
+      try {
+        const response = await fetch("/api/inventory");
+        if (!response.ok) {
+          throw new Error("在庫リストの取得に失敗しました");
+        }
+        const data = await response.json();
+        setInventory(data);
+      } catch (error) {
+        console.error("在庫リスト取得エラー:", error);
+        alert("在庫リストの取得中にエラーが発生しました");
+      }
+    };
+
+    fetchInventory();
+  }, []);
+
+  // 在庫を追加
+  const handleAddItem = async () => {
     if (!newItemName || newItemQuantity <= 0) {
       alert("有効な名前と数量を入力してください");
       return;
     }
 
-    const newItem: InventoryItem = {
-      id: Date.now(),
+    const newItem = {
       name: newItemName,
       quantity: newItemQuantity,
       category: newItemCategory,
     };
 
-    setInventory([...inventory, newItem]);
-    setNewItemName("");
-    setNewItemQuantity(1);
-    setNewItemCategory(categories[0]?.name || ""); // デフォルトカテゴリに戻す
+    try {
+      const response = await fetch("/api/inventory", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      });
+
+      if (!response.ok) {
+        throw new Error("在庫の追加に失敗しました");
+      }
+
+      const savedItem = await response.json();
+      setInventory([...inventory, savedItem]); // ローカルステートに新しい在庫を追加
+      setNewItemName("");
+      setNewItemQuantity(1);
+      setNewItemCategory(categories[0]?.name || ""); // デフォルトカテゴリに戻す
+    } catch (error) {
+      console.error(error);
+      alert("在庫の登録中にエラーが発生しました");
+    }
   };
 
+  // カテゴリを追加
   const handleAddCategory = async () => {
     if (!newCategoryName) {
       alert("カテゴリ名を入力してください");
