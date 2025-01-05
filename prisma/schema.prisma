@@ -14,3 +14,17 @@ model User {
   password String
   createdAt DateTime @default(now())
 }
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  name      String
+  quantity  Int
+  category  Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  inventory Inventory[]
+}
