@@ -29,7 +29,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-xl font-bold text-center text-gray-800 mb-6">
-          ログイン
+          Adminログイン
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -37,7 +37,7 @@ export default function LoginPage() {
               htmlFor="username"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              ユーザー名
+              Adminユーザー名(admin)
             </label>
             <input
               id="username"
@@ -53,7 +53,7 @@ export default function LoginPage() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              パスワード
+              Adminパスワード(password123)
             </label>
             <input
               id="password"
