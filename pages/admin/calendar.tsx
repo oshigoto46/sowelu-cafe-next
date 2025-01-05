@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // カレンダー用のスタイルをインポート
 import "../../styles/custom-calendar.css"; // カスタムスタイルをインポート
+import AdminSidebar from "@/components/AdminSidebar";
 import "../../app/globals.css";
-// import { ja } from 'date-fns/locale'; // 日本語ロケールをインポート
 
 interface Reservation {
   id: number;
@@ -13,16 +13,14 @@ interface Reservation {
   title: string;
 }
 
-export default function CalendarPage() {
+export default function ReservationCalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [hoveredDate, setHoveredDate] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newReservationTitle, setNewReservationTitle] = useState<string>("");
 
-  // useEffect を利用して、クライアントサイドでのみ初期設定
   useEffect(() => {
-    setSelectedDate(new Date()); // 現在の日付を選択
+    setSelectedDate(new Date()); // カレンダーの現在の日付
   }, []);
 
   const handleAddReservation = () => {
@@ -32,7 +30,7 @@ export default function CalendarPage() {
     }
 
     const newReservation: Reservation = {
-      id: reservations.length > 0 ? Math.max(...reservations.map(res => res.id)) + 1 : 1,
+      id: reservations.length > 0 ? Math.max(...reservations.map((res) => res.id)) + 1 : 1,
       date: selectedDate.toISOString().split("T")[0],
       title: newReservationTitle,
     };
@@ -43,74 +41,42 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" suppressHydrationWarning> {/* suppressHydrationWarning を追加 */}
-      {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">予約カレンダー</h2>
-
-        {/* カレンダー */}
-        <div className="calendar-container mb-6">
-          <div suppressHydrationWarning> {/* suppressHydrationWarning をここに追加 */}
-            <Calendar
-              value={selectedDate}
-              onChange={(date: Date) => setSelectedDate(date)}  // 型指定: Date
-              onClickDay={(date: Date) => {
-                setSelectedDate(date);
-                setIsModalOpen(true);
-              }}
-              locale="ja"  // 日本語ロケールを設定
-              tileContent={({ date }: { date: Date }) => {  // 型指定: { date: Date }
-                const dateString = date.toISOString().split("T")[0];
-                const dayReservations = reservations.filter(
-                  (res) => res.date === dateString
-                );
-
-                return (
-                  <div className="relative w-full h-full">
-                    {dayReservations.map((res) => (
-                      <div key={res.id} className="text-xs bg-blue-500 text-white rounded px-1">
-                        {res.title}
-                      </div>
-                    ))}
-                    {hoveredDate === dateString && (
-                      <button
-                        onClick={() => {
-                          setSelectedDate(date);
-                          setIsModalOpen(true);
-                        }}
-                        className="absolute top-1 left-1 bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-600"
-                      >
-                        ＋
-                      </button>
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </div>
+    <div className="min-h-screen flex">
+      <AdminSidebar className="w-1/4" />
+      <div className="flex-1 bg-gray-50 p-6">
+        <div className="w-full bg-white p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-4">予約カレンダー</h2>
+          <Calendar
+            value={selectedDate}
+            onChange={(date: Date) => setSelectedDate(date)}
+            onClickDay={(date: Date) => {
+              setSelectedDate(date);
+              setIsModalOpen(true);
+            }}
+            tileContent={({ date }: { date: Date }) => {
+              const dateString = date.toISOString().split("T")[0];
+              const dayReservations = reservations.filter((res) => res.date === dateString);
+              return dayReservations.map((res) => (
+                <div key={res.id} className="text-xs bg-blue-500 text-white rounded px-1">
+                  {res.title}
+                </div>
+              ));
+            }}
+          />
         </div>
 
         {/* 予約一覧 */}
         <div className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">予約一覧</h2>
-          {reservations.length === 0 ? (
-            <p className="text-gray-500">予約はありません。</p>
-          ) : (
-            <ul className="space-y-2">
-              {reservations.map((res) => (
-                <li
-                  key={res.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow flex justify-between items-center"
-                >
-                  <span className="text-gray-800">
-                    {res.date} - {res.title}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
+          <h2 className="text-lg font-semibold mb-4">予約一覧</h2>
+          <ul className="space-y-2">
+            {reservations.map((res) => (
+              <li key={res.id} className="bg-gray-100 p-4 rounded-lg shadow">
+                {res.date} - {res.title}
+              </li>
+            ))}
+          </ul>
         </div>
-      </main>
+      </div>
 
       {/* モーダル */}
       {isModalOpen && (
