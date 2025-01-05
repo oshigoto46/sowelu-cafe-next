@@ -20,17 +20,17 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "ユーザー登録が成功しました" });
   } catch (error) {
     // デバッグ用のログを出力
-    // console.log("接続設定:", {
-    //     host: process.env.DATABASE_HOST,
-    //     user: process.env.DATABASE_USER,
-    //     database: process.env.DATABASE_NAME,
-    //   });
-    // console.error("エラーが発生しました:");
-    // console.error("DATABASE_HOST:", process.env.DATABASE_HOST);
-    // console.error("DATABASE_USER:", process.env.DATABASE_USER);
-    // console.error("DATABASE_PASSWORD:", process.env.DATABASE_PASSWORD);
-    // console.error("DATABASE_NAME:", process.env.DATABASE_NAME);
-    // console.error("SQL エラーの詳細:", error.message);
+    console.log("接続設定:", {
+        host: process.env.DATABASE_HOST,
+        user: process.env.DATABASE_USER,
+        database: process.env.DATABASE_NAME,
+      });
+    console.error("エラーが発生しました:");
+    console.error("DATABASE_HOST:", process.env.DATABASE_HOST);
+    console.error("DATABASE_USER:", process.env.DATABASE_USER);
+    console.error("DATABASE_PASSWORD:", process.env.DATABASE_PASSWORD);
+    console.error("DATABASE_NAME:", process.env.DATABASE_NAME);
+    console.error("SQL エラーの詳細:", error.message);
 
     // エラーレスポンス
     return NextResponse.json({ error: "このメールアドレスは既に登録されています" }, { status: 400 });

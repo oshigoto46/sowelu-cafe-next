@@ -6,16 +6,13 @@ WORKDIR /usr/src/app
 
 # パッケージのインストール
 COPY package*.json ./
-RUN npm ci
+RUN npm install
 
 # ソースコードをコピー
 COPY . .
 
-# Next.js アプリケーションのビルド
-RUN npm run build
-
-# コンテナのポート3001を公開
-# EXPOSE 3001
+# コンテナのポート3000を公開
+EXPOSE 3000
 
 # Next.js アプリケーションを実行
-# CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]

@@ -1,13 +1,20 @@
-version: '3'
+version: '3.8'
 services:
-  nextjs:
-    build: .
+  app:
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app       # ホストとコンテナ間の同期
+      - /usr/src/app/node_modules  # node_modules の競合を防ぐ
     ports:
       - "3001:3000"
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/.next 
-      - /usr/src/app/node_modules  # ホストとコンテナ間で node_modules を分離
     environment:
-      - NODE_ENV=production
-    command: ["npm", "run", "dev"]  
+      NODE_ENV: development
+    command: ["npm", "run", "dev"] # 開発モードでホットリロード
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: password123
+      MYSQL_DATABASE: sowelu_development
+    ports:
+      - "3307:3306"
