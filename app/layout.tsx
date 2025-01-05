@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { FaLock } from "react-icons/fa";
 
+export const metadata = {
+  title: "Sowelu Cafe", // サイト名
+  icons: {
+    icon: "/favicon.svg", // SVGファイルのパス
+  },
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
