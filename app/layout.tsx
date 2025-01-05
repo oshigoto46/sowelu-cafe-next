@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ja">
@@ -10,27 +12,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               className="h-10 mr-4"
             />
             <nav className="flex space-x-4 text-sm">
-              <a href="#" className="font-medium text-black">
-                MEMBER / メンバー紹介
-              </a>
-              <a href="#" className="font-medium text-black">
-                COMMUNITY / コミュニティ紹介
-              </a>
-              <a href="#" className="font-medium text-black">
-                ABOUT / ネイバーとは？
-              </a>
+              <Link href="https://sowelu-incu.com/" className="font-medium text-black">
+                ABOUT / SOWELUとは？
+              </Link>
             </nav>
           </div>
           <div className="flex space-x-4">
-            <button className="bg-brown-600 text-white py-2 px-4 rounded hover:bg-brown-700">
+            <Link
+              href="/reserve"
+              className="bg-brown-600 text-white py-2 px-4 rounded hover:bg-brown-700"
+            >
               RESERVE / 施術予約
-            </button>
-            <button className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800">
+            </Link>
+            <Link
+              href="/mypage"
+              className="bg-black text-white py-2 px-4 rounded hover:bg-gray-800"
+            >
               MY PAGE / マイページ
-            </button>
+            </Link>
           </div>
         </header>
-        <main className="flex flex-col items-center justify-center h-screen p-4">{children}</main>
+        <main className="flex flex-col items-center justify-center h-screen p-4">
+          {children}
+        </main>
       </body>
     </html>
   );
