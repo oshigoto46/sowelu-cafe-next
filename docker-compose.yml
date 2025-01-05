@@ -1,8 +1,0 @@
-version: '3'
-services:
-  nextjs:
-    build: .
-    ports:
-      - "3001:3000"  # ホスト側3001をコンテナ側3000にマッピング
-    environment:
-      - NODE_ENV=production  # 本番環境モードを指定
