@@ -11,6 +11,4 @@
 - お名前.comでDNSひいてる (田渕EC2 `18.178.110.13`)
 - .envでめっちゃパスワード晒してる
 - Lets encryptでSSL構成（３ヶ月後きれちゃう。。）
-- git pull
-- docker-compose up & down
-  でデプロイ
+- git pull と docker-compose up & down でデプロイ
