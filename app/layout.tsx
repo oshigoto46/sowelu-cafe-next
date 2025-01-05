@@ -19,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className="flex space-x-4">
             <Link
-              href="/reserve"
+              href="/calendar"
               className="bg-brown-600 text-white py-2 px-4 rounded hover:bg-brown-700"
             >
               RESERVE / 施術予約
