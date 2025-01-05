@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FaLock } from "react-icons/fa";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +15,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <nav className="flex space-x-4 text-sm">
               <Link href="https://sowelu-incu.com/" className="font-medium text-black">
                 ABOUT / SOWELUとは？
+              </Link>
+              <Link
+                href="/admin" // Admin画面のリンク
+                className="flex items-center text-black font-medium hover:text-blue-600"
+              >
+                <FaLock className="mr-2 text-lg" /> {/* 鍵マーク */}
+                Admin画面
               </Link>
             </nav>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
 import "../../app/globals.css";
 
@@ -10,6 +10,11 @@ interface InventoryItem {
   minQuantity: number;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 export default function AdminDashboard() {
   const [inventory] = useState<InventoryItem[]>([
     { id: 1, name: "牛乳", quantity: 2, category: "食品", minQuantity: 5 },
@@ -18,13 +23,65 @@ export default function AdminDashboard() {
     { id: 4, name: "リンゴ", quantity: 8, category: "食品", minQuantity: 6 },
   ]);
 
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [newCategoryName, setNewCategoryName] = useState<string>("");
+
+  // カテゴリをAPIから取得
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+        if (!response.ok) {
+          throw new Error("カテゴリの取得に失敗しました");
+        }
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error(error);
+        alert("カテゴリの取得中にエラーが発生しました");
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // 新しいカテゴリを追加
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) {
+      alert("カテゴリ名を入力してください");
+      return;
+    }
+
+    const newCategory = { name: newCategoryName.trim() };
+
+    try {
+      // APIリクエスト
+      const response = await fetch("/api/categories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (!response.ok) {
+        throw new Error("カテゴリの追加に失敗しました");
+      }
+
+      const savedCategory = await response.json();
+      setCategories([...categories, savedCategory]); // 新しいカテゴリを追加
+      setNewCategoryName(""); // 入力フィールドをクリア
+    } catch (error) {
+      console.error(error);
+      alert("カテゴリの追加中にエラーが発生しました");
+    }
+  };
+
   return (
     <div className="min-h-screen flex">
       {/* サイドメニュー */}
-      <AdminSidebar />
-
-      {/* メインコンテンツ */}
-      <main className="flex-1 bg-gray-50 p-6">
+      <AdminSidebar className="w-1/4" />
+      <main className="w-3/4 bg-gray-50 p-6">
         <section id="dashboard">
           <h2 className="text-xl font-semibold mb-4">ダッシュボード</h2>
           <p className="text-gray-700">ここに全体的な情報を表示します。</p>
@@ -56,10 +113,9 @@ export default function AdminDashboard() {
             </ul>
           )}
         </section>
-
         <section id="orders" className="mt-8">
-          <h2 className="text-xl font-semibold mb-4">注文管理</h2>
-          <p className="text-gray-700">ここに注文情報を表示します。</p>
+          <h2 className="text-xl font-semibold mb-4">出勤管理</h2>
+          <p className="text-gray-700">ここに出勤情報を表示します。</p>
         </section>
 
         <section id="settings" className="mt-8">

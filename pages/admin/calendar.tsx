@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // カレンダー用のスタイルをインポート
-import "../styles/custom-calendar.css"; // カスタムスタイルをインポート
-import "../app/globals.css";
+import "../../styles/custom-calendar.css"; // カスタムスタイルをインポート
+import "../../app/globals.css";
 // import { ja } from 'date-fns/locale'; // 日本語ロケールをインポート
 
 interface Reservation {

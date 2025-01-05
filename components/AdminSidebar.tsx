@@ -11,7 +11,7 @@ export default function AdminSidebar() {
         <Link href="/admin/inventory" className="block hover:bg-gray-700 px-4 py-2 rounded">
           在庫管理
         </Link>
-        <Link href="/admin/orders" className="block hover:bg-gray-700 px-4 py-2 rounded">
+        <Link href="/admin/calendar" className="block hover:bg-gray-700 px-4 py-2 rounded">
           出勤管理
         </Link>
       </nav>
