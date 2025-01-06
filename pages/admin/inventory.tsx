@@ -140,10 +140,10 @@ export default function InventoryPage() {
       <main className="flex-1 mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">在庫を登録</h2>
 
-        {/* 横並びのフォーム */}
-        <div className="flex gap-4">
+        {/* 横並びのフォーム (レスポンシブ対応) */}
+        <div className="flex flex-col sm:flex-row gap-4">
           {/* カテゴリ追加フォーム */}
-          <div className="w-1/3 bg-gray-100 p-4 rounded-lg shadow">
+          <div className="w-full sm:w-1/3 bg-gray-100 p-4 rounded-lg shadow">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">カテゴリを追加</h3>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -165,7 +165,7 @@ export default function InventoryPage() {
           </div>
 
           {/* 在庫登録フォーム */}
-          <div className="w-2/3 bg-gray-100 p-4 rounded-lg shadow">
+          <div className="w-full sm:w-2/3 bg-gray-100 p-4 rounded-lg shadow">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">新しい在庫を追加</h3>
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-2">

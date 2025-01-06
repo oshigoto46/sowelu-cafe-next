@@ -14,6 +14,79 @@ export default function Home() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+<div className="flex flex-col sm:flex-row gap-4">
+  {/* カテゴリ追加フォーム */}
+  <div className="w-full sm:w-1/3 bg-gray-100 p-4 rounded-lg shadow">
+    <h3 className="text-lg font-semibold text-gray-800 mb-4">カテゴリを追加</h3>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        新しいカテゴリ名
+      </label>
+      <input
+        type="text"
+        value={newCategoryName}
+        onChange={(e) => setNewCategoryName(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+    <button
+      onClick={handleAddCategory}
+      className="w-full bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600"
+    >
+      追加
+    </button>
+  </div>
+
+  {/* 在庫登録フォーム */}
+  <div className="w-full sm:w-2/3 bg-gray-100 p-4 rounded-lg shadow">
+    <h3 className="text-lg font-semibold text-gray-800 mb-4">新しい在庫を追加</h3>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        在庫名
+      </label>
+      <input
+        type="text"
+        value={newItemName}
+        onChange={(e) => setNewItemName(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+      />
+    </div>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        数量
+      </label>
+      <input
+        type="number"
+        value={newItemQuantity}
+        onChange={(e) => setNewItemQuantity(Number(e.target.value))}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+        min="1"
+      />
+    </div>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        カテゴリ
+      </label>
+      <select
+        value={newItemCategory}
+        onChange={(e) => setNewItemCategory(e.target.value)}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+      >
+        {categories.map((category) => (
+          <option key={category.id} value={category.name}>
+            {category.name}
+          </option>
+        ))}
+      </select>
+    </div>
+    <button
+      onClick={handleAddItem}
+      className="w-full bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
+    >
+      追加
+    </button>
+  </div>
+</div>
 
   const handleSubmit = async () => {
     const endpoint = isRegister ? "/api/register" : "/api/login";
