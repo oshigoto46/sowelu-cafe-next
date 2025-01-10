@@ -1,148 +1,54 @@
-'use client'; // クライアントサイドでのみ動作することを指定
+'use client';
 
-import { useState, useEffect } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css"; // カレンダー用のスタイルをインポート
-import "../../styles/custom-calendar.css"; // カスタムスタイルをインポート
-import "../../app/globals.css";
-// import { ja } from 'date-fns/locale'; // 日本語ロケールをインポート
+import React, { useState } from 'react';
+import { Calendar, Views, momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import '../../styles/custom-calendar.css';
+import '../../app/globals.css';
 
-interface Reservation {
+const localizer = momentLocalizer(moment);
+
+interface Event {
   id: number;
-  date: string;
   title: string;
+  start: Date;
+  end: Date;
 }
 
 export default function CalendarPage() {
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [hoveredDate, setHoveredDate] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newReservationTitle, setNewReservationTitle] = useState<string>("");
+  const [events, setEvents] = useState<Event[]>([]);
 
-  // useEffect を利用して、クライアントサイドでのみ初期設定
-  useEffect(() => {
-    setSelectedDate(new Date()); // 現在の日付を選択
-  }, []);
-
-  const handleAddReservation = () => {
-    if (!selectedDate || !newReservationTitle) {
-      alert("タイトルを入力してください");
-      return;
+  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
+    const title = window.prompt('新しいイベントのタイトルを入力してください:');
+    if (title) {
+      setEvents((prev) => [
+        ...prev,
+        {
+          id: prev.length + 1,
+          title,
+          start,
+          end,
+        },
+      ]);
     }
-
-    const newReservation: Reservation = {
-      id: reservations.length > 0 ? Math.max(...reservations.map(res => res.id)) + 1 : 1,
-      date: selectedDate.toISOString().split("T")[0],
-      title: newReservationTitle,
-    };
-
-    setReservations([...reservations, newReservation]);
-    setNewReservationTitle("");
-    setIsModalOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6" suppressHydrationWarning> {/* suppressHydrationWarning を追加 */}
-      {/* メインコンテンツ */}
-      <main className="max-w-7xl mx-auto mt-8 bg-white p-6 shadow-lg rounded-lg">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">予約カレンダー</h2>
-
-        {/* カレンダー */}
-        <div className="calendar-container mb-6">
-          <div suppressHydrationWarning> {/* suppressHydrationWarning をここに追加 */}
-            <Calendar
-              value={selectedDate}
-              onChange={(date: Date) => setSelectedDate(date)}  // 型指定: Date
-              onClickDay={(date: Date) => {
-                setSelectedDate(date);
-                setIsModalOpen(true);
-              }}
-              locale="ja"  // 日本語ロケールを設定
-              tileContent={({ date }: { date: Date }) => {  // 型指定: { date: Date }
-                const dateString = date.toISOString().split("T")[0];
-                const dayReservations = reservations.filter(
-                  (res) => res.date === dateString
-                );
-
-                return (
-                  <div className="relative w-full h-full">
-                    {dayReservations.map((res) => (
-                      <div key={res.id} className="text-xs bg-blue-500 text-white rounded px-1">
-                        {res.title}
-                      </div>
-                    ))}
-                    {hoveredDate === dateString && (
-                      <button
-                        onClick={() => {
-                          setSelectedDate(date);
-                          setIsModalOpen(true);
-                        }}
-                        className="absolute top-1 left-1 bg-blue-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center hover:bg-blue-600"
-                      >
-                        ＋
-                      </button>
-                    )}
-                  </div>
-                );
-              }}
-            />
-          </div>
-        </div>
-
-        {/* 予約一覧 */}
-        <div className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">予約一覧</h2>
-          {reservations.length === 0 ? (
-            <p className="text-gray-500">予約はありません。</p>
-          ) : (
-            <ul className="space-y-2">
-              {reservations.map((res) => (
-                <li
-                  key={res.id}
-                  className="bg-gray-100 p-4 rounded-lg shadow flex justify-between items-center"
-                >
-                  <span className="text-gray-800">
-                    {res.date} - {res.title}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </main>
-
-      {/* モーダル */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h3 className="text-lg font-semibold text-gray-800 mb-4">
-              {selectedDate?.toISOString().split("T")[0]} に予約を追加
-            </h3>
-            <input
-              type="text"
-              value={newReservationTitle}
-              onChange={(e) => setNewReservationTitle(e.target.value)}
-              placeholder="予約タイトルを入力"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-            />
-            <div className="mt-4 flex space-x-4">
-              <button
-                onClick={handleAddReservation}
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600"
-              >
-                追加
-              </button>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-gray-300 text-gray-800 px-6 py-2 rounded-lg hover:bg-gray-400"
-              >
-                キャンセル
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-2xl font-bold mb-4">予約カレンダー</h1>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        defaultView={Views.WEEK}
+        views={['week', 'day']}
+        selectable
+        onSelectSlot={handleSelectSlot}
+        onSelectEvent={(event) => alert(`イベント: ${event.title}`)}
+        style={{ height: 600 }}
+        step={30} // 30分刻み
+        timeslots={2} // 1時間を2分割
+      />
     </div>
   );
 }

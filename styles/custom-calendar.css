@@ -1,53 +1,207 @@
-/* カレンダー全体のスタイル */
-.calendar-container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .large-calendar {
-    width: 100%;
-    max-width: 1200px; /* カレンダーの最大幅 */
-    font-size: 1.2rem; /* 全体のフォントサイズを拡大 */
-  }
+/* 現在の日付の背景色 */
+.react-calendar__tile--now {
+  background: rgba(66, 133, 244, 0.2);
+  color: #333;
+  font-weight: bold;
+  border-radius: 4px;
+}
 
-  .react-calendar {
-    width: 100% !important;
-    max-width: 100%;
-    height: auto;
-  }
-  
+/* 休日のスタイル (例: 日曜日) */
+.react-calendar__month-view__days__day:nth-child(7n) {
+  color: red; /* 休日の色 */
+}
+
+/* イベントスタイル (仮想イベントデータ用) */
+.calendar-event {
+  background-color: #4285f4; /* Googleカレンダー風ブルー */
+  color: white;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.9rem;
+  margin: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ホバー時のスタイル */
+.calendar-event:hover {
+  background-color: #357ae8;
+}
+
+/* カレンダーセルのホバー時のエフェクト */
+.react-calendar__tile:hover {
+  background: rgba(66, 133, 244, 0.1);
+  cursor: pointer;
+}
+
+/* ナビゲーションボタンのスタイル */
+.react-calendar__navigation button {
+  background: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.react-calendar__navigation button:hover {
+  background: #357ae8;
+}
+
+/* タイトルやナビゲーションの中央揃え */
+.react-calendar__navigation {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* タイトル部分のフォントを大きく */
+.react-calendar__navigation span {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+/* タイル全体のフォントを統一 */
+.react-calendar__tile {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* ウィークデイヘッダーのスタイル */
+.react-calendar__month-view__weekdays {
+  background-color: #f4f4f4;
+  font-weight: bold;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 10px;
+  text-align: center;
+}
+
+/* デスクトップ版でのレスポンシブ調整 */
+@media (min-width: 768px) {
   .react-calendar__tile {
-    position: relative !important;
-    height: 100px !important;
-  }
-  
-  .react-calendar__tile div {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    padding: 4px !important;
-    width: 100% !important;
-    height: 100% !important;
+    height: 120px !important; /* デスクトップで高さを拡大 */
   }
 
-  /* 日付がアクティブになったときのスタイル */
-  .react-calendar__tile--active {
-    background-color: #007bff;
-    color: white;
+  .calendar-event {
+    font-size: 1rem;
   }
-  
-  /* カレンダーのセル間のスペースを調整 */
-  .react-calendar__month-view__days__day {
-    margin: 4px;
+}
+
+.min-h-screen {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+/* FullCalendar (react-big-calendar) のカスタマイズ */
+
+/* 全体の幅調整 */
+.rbc-calendar {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  color: #333;
+  font-family: 'Arial', sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* 時間列の幅を調整 */
+.rbc-time-content {
+  width: 100%;
+}
+
+/* 各時間スロット */
+.rbc-timeslot-group {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.rbc-time-content .rbc-time-slot {
+  height: 40px; /* スロットの高さ */
+}
+
+/* ヘッダー */
+.rbc-header {
+  text-align: center;
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #f4f4f4;
+  border-left: 1px solid #ddd;
+}
+
+.rbc-header:first-child {
+  border-left: none;
+}
+
+/* イベントの見た目 */
+.rbc-event {
+  background-color: #4285f4;
+  color: white;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.rbc-event:hover {
+  background-color: #357ae8;
+  cursor: pointer;
+}
+
+/* 今日の日付の背景 */
+.rbc-today {
+  background-color: rgba(66, 133, 244, 0.1);
+}
+
+/* ナビゲーションボタンのスタイル */
+.rbc-toolbar button {
+  background: #4285f4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.rbc-toolbar button:hover {
+  background: #357ae8;
+}
+
+/* ナビゲーションバー */
+.rbc-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+}
+
+.rbc-toolbar-label {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .rbc-calendar {
+    width: 100%;
+    overflow-x: scroll; /* 横スクロールを許可 */
   }
-  
-  /* タイトルやナビゲーションのスタイル */
-  .react-calendar__navigation {
-    margin-bottom: 10px;
+
+  .rbc-time-content {
+    display: block;
   }
-  
-  .react-calendar__navigation button {
-    font-size: 1.1rem;
-  }
-  
+}

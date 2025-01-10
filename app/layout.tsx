@@ -13,11 +13,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="flex justify-between items-center p-4 border-b border-gray-200">
           {/* ロゴとナビゲーション */}
           <div className="flex items-center">
-            <img
-              src="/logo.svg" // ロゴ画像
-              alt="Logo"
-              className="h-10 mr-4"
-            />
+            <Link href="/" passHref>
+              <img
+                src="/logo.svg" // ロゴ画像
+                alt="Logo"
+                className="h-10 mr-4 cursor-pointer"
+              />
+            </Link>
             {/* PC用ナビゲーション */}
             <nav className="hidden md:flex space-x-4 text-sm">
               <Link href="https://sowelu-incu.com/" className="font-medium text-black">
@@ -64,7 +66,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     <FaLock className="mr-2 text-lg" /> Admin画面
                   </Link>
                   <Link href="/calendar" className="text-black font-medium hover:text-blue-600">
-                    RESERVE / 施設予約
+                    RESERVE / 予約
                   </Link>
                   <Link href="/mypage" className="text-black font-medium hover:text-blue-600">
                     MY PAGE / マイページ
