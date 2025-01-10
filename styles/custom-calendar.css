@@ -200,8 +200,4 @@
     width: 100%;
     overflow-x: scroll; /* 横スクロールを許可 */
   }
-
-  .rbc-time-content {
-    display: block;
-  }
 }
