@@ -47,24 +47,32 @@ export default function CalendarPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold mb-4">予約カレンダー</h1>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        defaultView={Views.WEEK}
-        views={['month', 'week', 'day']}
-        selectable
-        onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
-        style={{ height: 600 }}
-      />
-      {selectedDate && (
-        <EventPopup
-          date={selectedDate}
-          onClose={() => setSelectedDate(null)}
-          onSave={handleAddEvent}
+    <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
+      <div className="w-full max-w-8xl">
+        <h1 className="text-2xl font-bold mb-4 text-center">予約カレンダー</h1>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          defaultView={Views.WEEK}
+          views={['month', 'week', 'day']}
+          selectable
+          onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
+          style={{
+            height: "700px",
+            backgroundColor: "#ffffff",
+            borderRadius: "8px",
+            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+            padding: "16px",
+          }}
         />
-      )}
+        {selectedDate && (
+          <EventPopup
+            date={selectedDate}
+            onClose={() => setSelectedDate(null)}
+            onSave={handleAddEvent}
+          />
+        )}
+      </div>
     </div>
   );
 }

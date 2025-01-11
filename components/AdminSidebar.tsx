@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { FaHome } from 'react-icons/fa';
 
 export default function AdminSidebar({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // サイドバーの開閉状態
@@ -15,8 +16,12 @@ export default function AdminSidebar({ children }: { children: React.ReactNode }
       >
         <h1 className="text-2xl font-bold mb-6">管理者ページ</h1>
         <nav className="space-y-4">
-          <Link href="/admin" className="block hover:bg-gray-700 px-4 py-2 rounded">
-            ダッシュボード
+          <Link
+            href="/"
+            className="block hover:bg-gray-700 px-4 py-2 rounded flex items-center gap-2"
+          >
+            <FaHome />
+            <span>ホーム</span>
           </Link>
           <Link href="/admin/inventory" className="block hover:bg-gray-700 px-4 py-2 rounded">
             在庫管理
