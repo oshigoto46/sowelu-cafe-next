@@ -3,28 +3,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql" // MySQL を使用
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
 model User {
   id       Int      @id @default(autoincrement())
-  name     String
-  email    String   
+  email    String   @unique // email フィールドが一意であることを指定
+  name  String
   password String
   createdAt DateTime @default(now())
 }
 
 model Inventory {
-  id        Int      @id @default(autoincrement())
-  name      String
-  quantity  Int
-  category  Category @relation(fields: [categoryId], references: [id])
+  id         Int      @id @default(autoincrement())
+  name       String
+  quantity   Int
   categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId], map: "Inventory_categoryId_fkey")
 }
 
 model Category {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
   inventory Inventory[]
 }
