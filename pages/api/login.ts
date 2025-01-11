@@ -5,52 +5,61 @@ import jwt from 'jsonwebtoken';
 
 const prisma = new PrismaClient();
 
-const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key'; // 環境変数から読み込む
+const SECRET_KEY = process.env.JWT_SECRET;
+
+if (!SECRET_KEY) {
+  throw new Error("JWT_SECRET environment variable is not defined");
+}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-    return;
+    return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
   const { email, password } = req.body;
 
   if (!email || !password) {
-    res.status(400).json({ error: 'Email and password are required.' });
-    return;
+    return res.status(400).json({ error: 'Email and password are required.' });
   }
 
   try {
     // ユーザーをデータベースで検索
-    console.log(email)
     const user = await prisma.user.findUnique({
       where: { email },
     });
 
     if (!user) {
-      res.status(401).json({ error: 'Invalid email or password.' });
-      return;
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     // パスワードを照合
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      res.status(401).json({ error: 'Invalid email or password.' });
-      return;
+      return res.status(401).json({ error: 'Invalid email or password.' });
     }
 
     // JWT トークンを発行
     const token = jwt.sign(
-      { id: user.id, email: user.email }, // ペイロード
+      { id: user.id, email: user.email, name: user.name }, // ペイロード
       SECRET_KEY, // シークレットキー
       { expiresIn: '1h' } // 有効期限
     );
 
-    res.status(200).json({ message: 'Login successful.', token });
+    return res.status(200).json({
+      message: 'Login successful.',
+      token,
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+      },
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error during login:", error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    await prisma.$disconnect(); // Prisma クライアントの接続を閉じる
   }
 }
