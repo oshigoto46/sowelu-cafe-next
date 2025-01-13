@@ -1,6 +1,10 @@
 # Node.js 18 イメージを使用
 FROM node:18
 
+RUN apt-get update && apt-get install -y \
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
 # 作業ディレクトリの作成
 WORKDIR /usr/src/app
 
