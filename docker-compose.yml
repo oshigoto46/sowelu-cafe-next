@@ -11,10 +11,24 @@ services:
     environment:
       NODE_ENV: development
     command: ["npm", "run", "dev"] # 開発モードでホットリロード
+
   mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: password123
       MYSQL_DATABASE: sowelu_development
     ports:
-      - "3307:3306"
+      - "3306:3306"
+    command:
+      --default-authentication-plugin=mysql_native_password # 外部アクセス用
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql-data:
