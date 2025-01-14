@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -20,10 +20,35 @@ interface Event {
 export default function CalendarPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [currentView, setCurrentView] = useState<string>("week"); // 現在のビューを追跡
+  const [loading, setLoading] = useState<boolean>(true); // 初期値を true に設定
 
-  const handleSelectDate = (date: Date) => {
-    setSelectedDate(date);
-  };
+  // 初期データを非同期で読み込む
+  useEffect(() => {
+    const fetchEvents = async () => {
+      setLoading(true); // ローディング開始
+      try {
+        // // Simulate API call or data fetching
+        // const simulatedEvents: Event[] = [
+        //   {
+        //     id: 1,
+        //     title: "サンプルイベント",
+        //     start: new Date(),
+        //     end: new Date(new Date().getTime() + 60 * 60 * 1000), // 1時間後
+        //   },
+        // ];
+        // Simulate a delay
+        await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒待機
+        setEvents(simulatedEvents);
+      } catch (error) {
+        console.error("Error loading events:", error);
+      } finally {
+        setLoading(false); // ローディング終了
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   const handleAddEvent = (title: string, startTime: string, endTime: string) => {
     if (selectedDate) {
@@ -46,6 +71,18 @@ export default function CalendarPage() {
     }
   };
 
+  const handleSelectDate = (date: Date) => {
+    setSelectedDate(date);
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <div className="text-gray-500 text-lg">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
       <div className="w-full max-w-8xl">
@@ -54,7 +91,7 @@ export default function CalendarPage() {
           localizer={localizer}
           events={events}
           defaultView={Views.WEEK}
-          views={['month', 'week', 'day']}
+          views={["month", "week", "day"]}
           selectable
           onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
           style={{
