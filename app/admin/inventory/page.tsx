@@ -1,6 +1,8 @@
+'use client';
+
 import { useState, useEffect } from "react";
 import AdminSidebar from "@/components/AdminSidebar";
-import "../../app/globals.css";
+import '../../../app/globals.css';
 
 interface InventoryItem {
   id: number;
@@ -64,24 +66,41 @@ export default function InventoryPage() {
       alert("有効な名前、数量、カテゴリを入力してください");
       return;
     }
-
+  
     const newItem = {
       name: newItemName,
       quantity: newItemQuantity,
       categoryId: newItemCategory,
     };
-
+  
     try {
       const response = await fetch("/api/inventories", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newItem),
       });
-
+  
       if (!response.ok) throw new Error("在庫の追加に失敗しました");
-
-      const savedItem: InventoryItem = await response.json();
-      setInventory([...inventory, savedItem]); // ローカルステートに新しい在庫を追加
+  
+      const savedItem = await response.json();
+  
+      // `categoryId` を基に `categories` 配列から該当カテゴリを取得
+      const category = categories.find((cat) => cat.id === savedItem.categoryId);
+  
+      if (!category) {
+        console.error("カテゴリ情報が見つかりませんでした");
+        alert("カテゴリ情報の補完に失敗しました");
+        return;
+      }
+  
+      // `category` を補完した新しいアイテム
+      const completeItem: InventoryItem = {
+        ...savedItem,
+        category,
+      };
+  
+      // ローカルステートを更新
+      setInventory([...inventory, completeItem]);
       setNewItemName("");
       setNewItemQuantity(1);
       setNewItemCategory(categories[0]?.id || null); // デフォルトカテゴリに戻す
