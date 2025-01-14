@@ -20,28 +20,28 @@ interface Event {
 export default function CalendarPage() {
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [currentView, setCurrentView] = useState<string>("week"); // 現在のビューを追跡
-  const [loading, setLoading] = useState<boolean>(true); // 初期値を true に設定
+  const [currentView, setCurrentView] = useState<string>("week");
+  const [loading, setLoading] = useState<boolean>(true);
 
   // 初期データを非同期で読み込む
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true); // ローディング開始
       try {
-        // // Simulate API call or data fetching
-        // const simulatedEvents: Event[] = [
-        //   {
-        //     id: 1,
-        //     title: "サンプルイベント",
-        //     start: new Date(),
-        //     end: new Date(new Date().getTime() + 60 * 60 * 1000), // 1時間後
-        //   },
-        // ];
-        // Simulate a delay
+        // サンプルイベントのシミュレーション
+        const simulatedEvents: Event[] = [
+          {
+            id: 1,
+            title: "サンプルイベント",
+            start: new Date(),
+            end: new Date(new Date().getTime() + 60 * 60 * 1000), // 1時間後
+          },
+        ];
+
         await new Promise((resolve) => setTimeout(resolve, 1000)); // 1秒待機
-        setEvents(simulatedEvents);
+        setEvents(simulatedEvents); // イベントをセット
       } catch (error) {
-        console.error("Error loading events:", error);
+        console.error("イベントの読み込み中にエラーが発生しました:", error);
       } finally {
         setLoading(false); // ローディング終了
       }
@@ -75,33 +75,43 @@ export default function CalendarPage() {
     setSelectedDate(date);
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="text-gray-500 text-lg">Loading...</div>
-      </div>
-    );
-  }
+  const handleViewChange = (view: string) => {
+    console.log(`ビュー変更イベント: ${view}`); // ビュー変更イベントのログ
+    setCurrentView(view);
+  };
+
+  useEffect(() => {
+    alert(`現在のビュー: ${currentView}`); // 現在のビューをアラート
+  }, [currentView]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
       <div className="w-full max-w-8xl">
         <h1 className="text-2xl font-bold mb-4 text-center">予約カレンダー</h1>
-        <Calendar
-          localizer={localizer}
-          events={events}
-          defaultView={Views.WEEK}
-          views={["month", "week", "day"]}
-          selectable
-          onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
-          style={{
-            height: "700px",
-            backgroundColor: "#ffffff",
-            borderRadius: "8px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            padding: "16px",
-          }}
-        />
+        {loading ? (
+          // ローディング中の表示
+          <div className="flex justify-center items-center h-full">
+            <p className="text-gray-500 text-lg">Loading...</p>
+          </div>
+        ) : (
+          // カレンダーの表示
+          <Calendar
+            localizer={localizer}
+            events={events}
+            defaultView={Views.WEEK}
+            views={["month", "week", "day"]}
+            selectable
+            onView={handleViewChange} // ビュー変更ハンドラー
+            onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
+            style={{
+              height: "700px",
+              backgroundColor: "#ffffff",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+              padding: "16px",
+            }}
+          />
+        )}
         {selectedDate && (
           <EventPopup
             date={selectedDate}
