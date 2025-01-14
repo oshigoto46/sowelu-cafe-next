@@ -80,9 +80,9 @@ export default function CalendarPage() {
     setCurrentView(view);
   };
 
-  useEffect(() => {
-    alert(`現在のビュー: ${currentView}`); // 現在のビューをアラート
-  }, [currentView]);
+  // useEffect(() => {
+  //   alert(`現在のビュー: ${currentView}`); // 現在のビューをアラート
+  // }, [currentView]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex justify-center items-start p-6">
@@ -100,6 +100,7 @@ export default function CalendarPage() {
             events={events}
             defaultView={Views.WEEK}
             views={["month", "week", "day"]}
+            view = {currentView}
             selectable
             onView={handleViewChange} // ビュー変更ハンドラー
             onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
