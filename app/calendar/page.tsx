@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Calendar, Views, momentLocalizer } from "react-big-calendar";
@@ -54,9 +54,24 @@ export default function CalendarPage() {
           localizer={localizer}
           events={events}
           defaultView={Views.WEEK}
-          views={['month', 'week', 'day']}
+          views={["month", "week", "day"]}
           selectable
           onSelectSlot={(slotInfo) => handleSelectDate(slotInfo.start)}
+          components={{
+            eventWrapper: ({ event, children }) => (
+              <div
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  alert(`イベント: "${event.title}" に右クリックしました。`);
+                  if (window.confirm(`イベント "${event.title}" を削除しますか？`)) {
+                    setEvents((prev) => prev.filter((ev) => ev.id !== event.id));
+                  }
+                }}
+              >
+                {children}
+              </div>
+            ),
+          }}
           style={{
             height: "700px",
             backgroundColor: "#ffffff",
