@@ -18,7 +18,7 @@ export default function Home() {
 
   // フォームの送信ハンドラー
   const handleSubmit = async () => {
-    const endpoint = isRegister ? "/api/register" : "/api/login";
+    const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
 
     try {
       const response = await fetch(endpoint, {

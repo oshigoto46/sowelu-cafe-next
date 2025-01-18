@@ -8,11 +8,12 @@ datasource db {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  email    String   @unique // email フィールドが一意であることを指定
-  name  String
-  password String
-  createdAt DateTime @default(now())
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
+  name      String
+  password  String
+  createdAt DateTime   @default(now())
+  sessions  Session[]  // ユーザーとセッションのリレーション
 }
 
 model Inventory {
@@ -29,4 +30,15 @@ model Category {
   id        Int         @id @default(autoincrement())
   name      String      @unique
   inventory Inventory[]
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  sessionToken String   @unique
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
