@@ -32,7 +32,13 @@ export default function Home() {
       }
 
       const data = await response.json();
-      alert(data.message || data.error);
+
+      if (data.redirect) {
+        // ログイン成功時にリダイレクト
+        window.location.href = data.redirect;
+      } else {
+        alert(data.message || data.error);
+      }
     } catch (error) {
       console.error("送信エラー:", error);
       alert("エラーが発生しました。もう一度お試しください。");

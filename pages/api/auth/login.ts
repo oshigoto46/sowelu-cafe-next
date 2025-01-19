@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       serialize("sessionToken", sessionToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         path: "/",
         maxAge: 60 * 60, // 1時間
       })
@@ -61,7 +61,8 @@ export default async function handler(req, res) {
     return res.status(200).json({
       message: "Login successful.",
       user: { id: user.id, name: user.name, email: user.email },
-    });
+      redirect: "/mypage", // リダイレクト先を指定
+    });    
   } catch (error) {
     console.error("Error during login:", error);
     return res.status(500).json({ error: "Internal Server Error" });
