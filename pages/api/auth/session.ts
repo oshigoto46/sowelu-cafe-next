@@ -1,12 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { parse } from "cookie";
-import jwt from "jsonwebtoken";
+import { PrismaClient } from "@prisma/client";
 
-const SECRET_KEY = process.env.JWT_SECRET;
-
-if (!SECRET_KEY) {
-  throw new Error("JWT_SECRET is not defined in environment variables.");
-}
+const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "GET") {
@@ -22,10 +18,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const user = jwt.verify(sessionToken, SECRET_KEY);
-    return res.status(200).json({ user });
-  } catch (err) {
-    console.error("Session validation error:", err);
-    return res.status(401).json({ error: "Invalid or expired session." });
+    // セッションをデータベースから取得
+    const session = await prisma.session.findUnique({
+      where: { sessionToken },
+      include: { user: true }, // ユーザー情報も取得
+    });
+
+    // セッションが存在しない、または期限切れの場合
+    if (!session || session.expires < new Date()) {
+      return res.status(401).json({ error: "Session expired or invalid." });
+    }
+
+    // ユーザー情報を返す
+    return res.status(200).json({
+      user: {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.name,
+      },
+    });
+  } catch (error) {
+    console.error("Session validation error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
